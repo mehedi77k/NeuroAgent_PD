@@ -1,0 +1,13 @@
+Title: Parkinson Gait Changes
+
+Keywords:
+gait, walking speed, stride variability, freezing, balance, movement instability
+
+Evidence:
+Gait-related changes in Parkinsonian disorders may include reduced walking speed, increased stride variability, freezing episodes, and balance instability. These movement findings can support disease severity assessment and follow-up planning.
+
+Clinical Use:
+This evidence can support interpretation when the gait agent detects borderline, moderate, or high movement-related risk.
+
+Safety:
+Gait findings should be reviewed in clinical context and should not be treated as a final diagnosis.

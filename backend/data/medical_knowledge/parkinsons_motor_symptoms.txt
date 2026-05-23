@@ -1,0 +1,13 @@
+Title: Parkinson Motor Symptoms
+
+Keywords:
+tremor, rigidity, bradykinesia, updrs, motor symptoms, medication response
+
+Evidence:
+Parkinsonian motor symptoms commonly include tremor, rigidity, bradykinesia, and postural instability. Elevated clinical scores such as UPDRS, along with tremor and rigidity findings, can support the need for neurologist review.
+
+Clinical Use:
+This evidence can support interpretation when the clinical agent detects moderate or high motor-related risk.
+
+Safety:
+This evidence is for clinical decision-support only and must be reviewed by a qualified clinician.

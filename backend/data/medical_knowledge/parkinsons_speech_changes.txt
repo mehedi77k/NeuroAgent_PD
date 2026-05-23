@@ -1,0 +1,13 @@
+Title: Parkinson Speech Changes
+
+Keywords:
+speech, voice, jitter, shimmer, hnr, pitch variation, dysphonia
+
+Evidence:
+Speech changes in Parkinsonian syndromes may include reduced voice stability, altered pitch variation, increased jitter or shimmer, and reduced harmonic-to-noise ratio. These findings may support monitoring but should not be used alone for diagnosis.
+
+Clinical Use:
+This evidence can support interpretation when the speech agent detects borderline, moderate, or high speech-related risk.
+
+Safety:
+Speech findings should be interpreted together with clinical examination and neurologist review.

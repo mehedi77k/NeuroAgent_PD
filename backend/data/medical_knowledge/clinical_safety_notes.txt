@@ -1,0 +1,13 @@
+Title: Clinical Safety Notes
+
+Keywords:
+safety, human review, conflict, uncertainty, clinical decision support
+
+Evidence:
+AI-generated medical outputs should be treated as clinical decision-support, not final diagnosis. Cases with moderate or high risk, conflicting agent outputs, or low-confidence findings should be reviewed by a qualified neurologist.
+
+Clinical Use:
+This evidence supports safety warnings, critic-agent review, conflict handling, and human-in-the-loop decision making.
+
+Safety:
+The system must not provide final diagnosis, prescription, or treatment decisions.

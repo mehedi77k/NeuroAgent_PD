@@ -1,0 +1,6 @@
+patient_id,age,gender,updrs_score,tremor_score,rigidity_score,bradykinesia_score,disease_duration_years,jitter,shimmer,hnr,pitch_variation,walking_speed,stride_variability,freezing_index,balance_score,diagnosis_label,severity_label
+PD-001,64,male,38,3,2,3,4,0.021,0.034,17.4,0.28,0.82,0.31,0.42,0.58,parkinson,moderate
+PD-002,55,female,18,1,1,1,1,0.009,0.015,23.1,0.12,1.18,0.12,0.10,0.86,low_risk,mild
+PD-003,71,male,52,4,4,4,8,0.036,0.062,13.2,0.44,0.61,0.52,0.70,0.38,parkinson,severe
+PD-004,60,female,29,2,2,2,3,0.017,0.026,19.5,0.23,0.95,0.24,0.31,0.67,parkinson,moderate
+PD-005,49,male,12,1,1,1,0,0.006,0.011,25.8,0.08,1.31,0.09,0.05,0.92,low_risk,mild
