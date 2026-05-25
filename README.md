@@ -47,7 +47,7 @@
 
 ## Overview
 
-NeuroAgent-PD is designed as a doctor-facing Parkinson’s disease clinical decision-support dashboard.
+NeuroAgent_PD is designed as a doctor-facing Parkinson’s disease clinical decision-support dashboard.
 
 The system allows clinicians, researchers, or evaluators to:
 
