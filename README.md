@@ -1,27 +1,27 @@
 # NeuroAgent_PD: Multi-Agent Parkinson’s Disease Clinical Decision-Support Platform
 
-![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
-![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-CB1B1B?style=for-the-badge)
-![scikit-learn](https://img.shields.io/badge/scikit--learn-F7931E?style=for-the-badge&logo=scikitlearn&logoColor=white)
-![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
-![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
-![Status](https://img.shields.io/badge/Status-MVP%20Prototype-success?style=for-the-badge)
+![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688?style=for-the-badge&logo=fastapi&logoColor=white)
+![React](https://img.shields.io/badge/React-Frontend-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+![FAISS](https://img.shields.io/badge/FAISS-Vector_Search-blue?style=for-the-badge)
+![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Status](https://img.shields.io/badge/Status-MVP_Prototype-success?style=for-the-badge)
 
-**NeuroAgent_PD** is a full-stack multi-agent clinical decision-support prototype for Parkinson’s disease assessment. It combines structured clinical data, speech indicators, gait indicators, coordinated risk scoring, triage support, conflict detection, medical evidence retrieval, progression simulation, DBS referral support, explainability, critic review, doctor feedback, and LLM-assisted report generation into a single doctor-facing web platform.
+**NeuroAgent_PD** is a full-stack multi-agent clinical decision-support prototype for Parkinson’s disease assessment. It combines structured clinical features, speech indicators, gait indicators, coordinated risk scoring, triage support, conflict detection, PDF-based RAG medical evidence retrieval, progression simulation, DBS specialist discussion flagging, explainability, critic safety review, doctor feedback, and report generation into a single clinician-facing dashboard.
 
 > **Medical Safety Notice**  
-> NeuroAgent_PD is a research and academic prototype. It does **not** provide a final medical diagnosis, treatment decision, prescription, or replacement for a qualified neurologist. All outputs must be reviewed by a licensed medical professional before any clinical decision is made.
+> NeuroAgent_PD is a research and academic prototype. It does **not** provide a final medical diagnosis, prescription, treatment decision, surgical recommendation, or replacement for a qualified neurologist. All outputs must be reviewed by a licensed medical professional before any clinical interpretation or action.
 
 ---
 
 ## Table of Contents
 
 - [Overview](#overview)
+- [Demo Workflow](#demo-workflow)
 - [Core Features](#core-features)
 - [Agent System](#agent-system)
+- [RAG Medical Evidence Pipeline](#rag-medical-evidence-pipeline)
 - [Technology Stack](#technology-stack)
 - [System Architecture](#system-architecture)
 - [Project Structure](#project-structure)
@@ -42,6 +42,7 @@
 - [Future Improvements](#future-improvements)
 - [Repository](#repository)
 - [Project Status](#project-status)
+- [Disclaimer](#disclaimer)
 
 ---
 
@@ -52,16 +53,17 @@ NeuroAgent_PD is designed as a doctor-facing Parkinson’s disease clinical deci
 The system allows clinicians, researchers, or evaluators to:
 
 - View demo Parkinson’s patient cases
-- Search patients by ID or name
+- Search patients by patient ID or name
 - Inspect structured patient profile data
 - Analyze clinical, speech, and gait features
 - Run a full multi-agent Parkinson’s risk assessment
 - Generate coordinated final risk prediction
-- Review clinical triage recommendation
+- Review triage recommendation
 - Detect disagreement between agent outputs
-- Retrieve relevant medical evidence
+- Retrieve patient-specific medical evidence from a PDF-based RAG knowledge base
+- Review source file, page number, similarity score, matched reason, and retrieved evidence text
 - Simulate 12-month progression risk
-- Evaluate DBS referral discussion indicators
+- Evaluate DBS specialist discussion indicators
 - View feature-level explainability
 - Review automated critic warnings
 - Generate doctor-facing clinical reports
@@ -71,7 +73,38 @@ The system allows clinicians, researchers, or evaluators to:
 The platform uses a modular architecture:
 
 ```text
-Frontend Dashboard → FastAPI Backend → Multi-Agent AI Layer → PostgreSQL Storage
+React Frontend Dashboard
+        ↓
+FastAPI Backend
+        ↓
+Multi-Agent Clinical AI Layer
+        ↓
+PostgreSQL + PDF Vector Knowledge Base
+```
+
+---
+
+## Demo Workflow
+
+Use this flow when demonstrating the project:
+
+```text
+1. Start the full system with Docker Compose.
+2. Open the frontend at http://localhost:5173.
+3. Select a patient case from the patient list.
+4. Review the patient profile, clinical scores, speech features, and gait features.
+5. Click Run Agent Analysis.
+6. Open Agent Analysis to review clinical, speech, gait, coordinator, triage, conflict, progression, DBS, explainability, and critic outputs.
+7. Open Medical Evidence to review PDF-based RAG evidence from the MDS Parkinson’s diagnostic criteria document.
+8. Open Reports to review the doctor-facing summary.
+9. Submit doctor feedback such as approve, reject, request more data, or escalate to neurologist.
+10. Review saved analysis history.
+```
+
+Important demo note:
+
+```text
+The first RAG-enabled analysis may take longer because the sentence-transformer embedding model is loaded into memory. Later analyses are usually faster.
 ```
 
 ---
@@ -100,10 +133,10 @@ The system runs multiple specialized agents over the same patient case:
 - Conflict Agent
 - Medical Evidence / RAG Agent
 - Progression Agent
-- DBS Referral Support Agent
+- DBS Specialist Discussion Agent
 - Explainability Agent
 - Critic Agent
-- LLM Report Generator
+- Report Generator
 
 ### Risk Scoring
 
@@ -145,24 +178,24 @@ If trained model artifacts are not available, the system continues with rule-bas
 
 ### Doctor-Facing Dashboard
 
-The React frontend provides a professional dashboard experience for:
+The React frontend provides a clinical dashboard for:
 
 - Selecting patient cases
 - Running multi-agent analysis
 - Viewing individual agent outputs
 - Viewing final coordinated risk
 - Reviewing triage recommendation
-- Reading generated clinical report
-- Checking medical evidence
+- Reading generated clinical reports
+- Checking PDF-based medical evidence
 - Reviewing progression simulation
-- Checking DBS referral indicators
+- Checking DBS specialist discussion indicators
 - Reviewing explainability output
 - Submitting doctor feedback
 - Viewing saved analysis history
 
 ### Analysis History
 
-Each analysis can be stored in PostgreSQL with:
+Each analysis is stored in PostgreSQL with:
 
 - Patient ID
 - Patient name
@@ -220,6 +253,8 @@ Outputs:
 - Confidence
 - Top contributing features
 - Optional ML prediction
+- Optional ML confidence
+- Optional ML class probabilities
 
 ---
 
@@ -241,6 +276,8 @@ Outputs:
 - Speech abnormality severity
 - Confidence
 - Optional ML prediction
+- Optional ML confidence
+- Optional ML class probabilities
 
 ---
 
@@ -262,6 +299,8 @@ Outputs:
 - Movement abnormality severity
 - Confidence
 - Optional ML prediction
+- Optional ML confidence
+- Optional ML class probabilities
 
 ---
 
@@ -335,23 +374,59 @@ Outputs:
 
 ### 7. Medical Evidence / RAG Agent
 
-Retrieves relevant medical evidence from local medical knowledge files.
+Retrieves patient-specific medical evidence from a PDF-based vector knowledge base.
 
-Evidence topics include:
+Current knowledge source:
 
-- Parkinson’s clinical symptoms
-- Motor symptom patterns
-- Speech changes
-- Gait changes
-- Safety notes for clinical interpretation
+```text
+MDS Clinical Diagnostic Criteria for Parkinson's Disease
+```
+
+Current RAG pipeline:
+
+```text
+PDF → text extraction → chunking → sentence-transformer embeddings → FAISS vector index → patient-specific evidence retrieval
+```
+
+The RAG Agent builds patient-specific queries using:
+
+- Clinical risk level
+- Speech risk level
+- Gait risk level
+- Final coordinated risk level
+- UPDRS score
+- Tremor score
+- Rigidity score
+- Bradykinesia score
+- Medication response
+- Freezing index
+- Balance score
+- Walking speed
+- Conflict signal
 
 Outputs:
 
+- Retrieval method
+- Query strategy
+- Patient-specific queries
 - Evidence count
 - Retrieved evidence items
-- Source file
+- Evidence topic
+- Source PDF file
+- Page number
+- Chunk ID
+- Similarity score
 - Matched reason
-- Safety note
+- Patient-specific search query
+- Retrieved evidence text
+- Clinical safety note
+
+Important:
+
+```text
+The RAG Agent retrieves evidence for clinician review only.
+It does not provide a standalone diagnosis.
+```
 
 ---
 
@@ -391,7 +466,7 @@ Outputs:
 
 ---
 
-### 9. DBS Referral Support Agent
+### 9. DBS Specialist Discussion Agent
 
 Evaluates whether the patient profile may justify discussion with a DBS specialist.
 
@@ -406,7 +481,7 @@ Criteria checked:
 
 Outputs:
 
-- Referral recommended or not
+- Referral discussion flag
 - Referral level
 - Referral score
 - Criteria met
@@ -455,7 +530,7 @@ It checks:
 - Conflict signals
 - Moderate or high coordinated risk
 - Evidence availability
-- DBS referral signal
+- DBS discussion signal
 - Need for human review
 
 Outputs:
@@ -467,16 +542,128 @@ Outputs:
 
 ---
 
-### 12. LLM Report Generator
+### 12. Report Generator
 
-Generates an optional doctor-facing clinical report using an external LLM.
+Generates a doctor-facing clinical report.
 
-Supported providers:
+The report can include:
+
+- Patient summary
+- Final coordinated risk
+- Triage recommendation
+- Agent agreement summary
+- Conflict notes
+- Medical evidence summary
+- Progression summary
+- DBS specialist discussion summary
+- Safety warning
+- LLM-generated report when enabled
+- Template fallback report when LLM is disabled or unavailable
+
+Supported optional LLM providers:
 
 - Groq
 - Gemini
 
-If LLM generation is disabled or API keys are missing, the system falls back to the template-based report.
+---
+
+## RAG Medical Evidence Pipeline
+
+The project includes a PDF-based RAG pipeline for medical evidence retrieval.
+
+### Knowledge Base Location
+
+```text
+backend/data/medical_knowledge/pdf_sources/
+```
+
+Current PDF source:
+
+```text
+backend/data/medical_knowledge/pdf_sources/mds-clinical-diagnostic-criteria-for-parkinson-disease.pdf
+```
+
+### Vector Store Location
+
+```text
+backend/data/medical_knowledge/vector_store/
+```
+
+Generated files:
+
+```text
+index.faiss
+chunks.json
+```
+
+### RAG Build Script
+
+```text
+backend/scripts/build_rag_index.py
+```
+
+### Build or Rebuild the RAG Index
+
+Run this command from the project root:
+
+```bash
+docker compose run --rm backend python scripts/build_rag_index.py
+```
+
+Expected output:
+
+```text
+RAG index built successfully.
+Chunks: <number_of_chunks>
+Index path: /app/data/medical_knowledge/vector_store/index.faiss
+```
+
+### When to Rebuild the RAG Index
+
+Rebuild the index when:
+
+- A new PDF is added
+- An existing PDF is renamed
+- An existing PDF is replaced
+- `index.faiss` is deleted
+- `chunks.json` is deleted
+- Evidence retrieval returns no results even though PDFs exist
+
+### RAG Dependencies
+
+The backend uses:
+
+```text
+pypdf
+sentence-transformers
+faiss-cpu
+```
+
+### RAG Output Example
+
+```json
+{
+  "agent_name": "rag_agent",
+  "retrieval_method": "patient_specific_multi_query_pdf_vector_search_faiss",
+  "knowledge_base": "MDS Clinical Diagnostic Criteria for Parkinson's Disease",
+  "query_strategy": "patient_specific_multi_query",
+  "evidence_found": true,
+  "evidence_count": 4,
+  "evidence": [
+    {
+      "topic": "Motor parkinsonism criteria",
+      "source": "mds-clinical-diagnostic-criteria-for-parkinson-disease.pdf",
+      "page": 5,
+      "chunk_id": "mds-clinical-diagnostic-criteria-for-parkinson-disease_p5_c1",
+      "similarity_score": 0.7675,
+      "matched_reason": "Patient has clinically relevant bradykinesia with tremor and/or rigidity, so the RAG search focuses on the MDS definition of parkinsonism.",
+      "search_query": "MDS Parkinson disease diagnostic criteria motor parkinsonism bradykinesia combined with rest tremor or rigidity Patient context: ...",
+      "text": "Retrieved evidence text..."
+    }
+  ],
+  "safety_note": "This evidence is for clinician review only. It is not a standalone diagnosis or treatment recommendation."
+}
+```
 
 ---
 
@@ -485,11 +672,13 @@ If LLM generation is disabled or API keys are missing, the system falls back to 
 | Layer | Technologies |
 |---|---|
 | Frontend | React, Vite, JavaScript, CSS |
-| Backend | Python, FastAPI, Uvicorn |
+| Backend | Python 3.11, FastAPI, Uvicorn |
 | Database | PostgreSQL |
 | ORM | SQLAlchemy |
 | Validation | Pydantic |
 | ML / Data | pandas, numpy, scikit-learn, joblib |
+| RAG / Evidence Retrieval | pypdf, sentence-transformers, FAISS |
+| Medical Knowledge Base | PDF sources, vector_store/index.faiss, chunks.json |
 | LLM Integration | Groq API, Gemini API, httpx |
 | Containerization | Docker, Docker Compose |
 | API Documentation | FastAPI Swagger UI |
@@ -505,10 +694,10 @@ If LLM generation is disabled or API keys are missing, the system falls back to 
 │                                                                      │
 │                  Doctor / Clinician / Research User                  │
 │                                                                      │
-│  - Select patient case                                               |
-│  - Run Parkinson’s multi-agent analysis                              |
-│  - Review risk, triage, evidence, explainability, and report         |
-│  - Submit feedback                                                   |
+│  - Select patient case                                               │
+│  - Run Parkinson’s multi-agent analysis                              │
+│  - Review risk, triage, evidence, explainability, and report         │
+│  - Submit feedback                                                   │
 └──────────────────────────────────────┬───────────────────────────────┘
                                        │
                                        ▼
@@ -524,7 +713,7 @@ If LLM generation is disabled or API keys are missing, the system falls back to 
 │  - Risk and triage summary                                            │
 │  - Medical evidence                                                   │
 │  - Progression simulation                                             │
-│  - DBS referral support                                               │
+│  - DBS specialist discussion flag                                     │
 │  - Explainability                                                     │
 │  - Clinical report                                                    │
 │  - Doctor feedback                                                    │
@@ -564,22 +753,24 @@ If LLM generation is disabled or API keys are missing, the system falls back to 
 │        ├── Conflict Agent                                             │
 │        ├── Medical Evidence / RAG Agent                               │
 │        ├── Progression Agent                                          │
-│        ├── DBS Referral Support Agent                                 │
+│        ├── DBS Specialist Discussion Agent                            │
 │        ├── Explainability Agent                                       │
 │        ├── Critic Agent                                               │
-│        └── LLM Report Generator                                       │
+│        └── Report Generator                                           │
 └──────────────────────────────────────┬───────────────────────────────┘
                                        │
-                                       ▼
-┌──────────────────────────────────────────────────────────────────────┐
-│                         Data Persistence Layer                       │
-│                                                                      │
-│                              PostgreSQL                              │
-│                                                                      │
-│  Tables:                                                              │
-│  - analysis_results                                                   │
-│  - doctor_feedback                                                    │
-└──────────────────────────────────────────────────────────────────────┘
+                ┌──────────────────────┴──────────────────────┐
+                ▼                                             ▼
+┌──────────────────────────────────────┐     ┌──────────────────────────────────────┐
+│          Data Persistence Layer       │     │       Medical Knowledge Layer         │
+│                                      │     │                                      │
+│              PostgreSQL              │     │      PDF Sources + FAISS Index        │
+│                                      │     │                                      │
+│  Tables:                             │     │  - MDS diagnostic criteria PDF        │
+│  - analysis_results                  │     │  - chunks.json                        │
+│  - index.faiss                       │     │  - index.faiss                        │
+│  - doctor_feedback                   │     │                                      │
+└──────────────────────────────────────┘     └──────────────────────────────────────┘
 ```
 
 ---
@@ -587,7 +778,7 @@ If LLM generation is disabled or API keys are missing, the system falls back to 
 ## Project Structure
 
 ```text
-NeuroAgent_AI
+NeuroAgent_PD
 │
 ├── backend
 │   ├── app
@@ -613,7 +804,8 @@ NeuroAgent_AI
 │   │   │   └── config.py
 │   │   │
 │   │   ├── data
-│   │   │   └── demo_patients.py
+│   │   │   ├── demo_patients.py
+│   │   │   └── demo_patients.csv
 │   │   │
 │   │   ├── db
 │   │   │   └── session.py
@@ -632,11 +824,24 @@ NeuroAgent_AI
 │   │   └── main.py
 │   │
 │   ├── artifacts
-│   │   └── trained ML artifacts
+│   │   ├── clinical_model.pkl
+│   │   ├── speech_model.pkl
+│   │   ├── gait_model.pkl
+│   │   ├── progression_model.pkl
+│   │   └── metadata / scalers / label encoders
 │   │
 │   ├── data
 │   │   ├── demo_patients.csv
 │   │   └── medical_knowledge
+│   │       ├── pdf_sources
+│   │       │   └── mds-clinical-diagnostic-criteria-for-parkinson-disease.pdf
+│   │       ├── vector_store
+│   │       │   ├── index.faiss
+│   │       │   └── chunks.json
+│   │       ├── clinical_safety_notes.txt
+│   │       ├── parkinsons_gait_changes.txt
+│   │       ├── parkinsons_motor_symptoms.txt
+│   │       └── parkinsons_speech_changes.txt
 │   │
 │   ├── datasets
 │   │   ├── clinical_agent_dataset.csv
@@ -646,6 +851,7 @@ NeuroAgent_AI
 │   │   └── generate_training_data.py
 │   │
 │   ├── scripts
+│   │   ├── build_rag_index.py
 │   │   └── train_models.py
 │   │
 │   ├── Dockerfile
@@ -654,8 +860,6 @@ NeuroAgent_AI
 │
 ├── frontend
 │   ├── src
-│   │   ├── services
-│   │   │   └── api.js
 │   │   ├── App.css
 │   │   ├── App.jsx
 │   │   └── main.jsx
@@ -699,8 +903,8 @@ Install the following before running the project:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/mehedi77k/NeuroAgent_AI.git
-cd NeuroAgent_AI
+git clone https://github.com/mehedi77k/NeuroAgent_PD.git
+cd NeuroAgent_PD
 ```
 
 ### 2. Create `.env`
@@ -728,7 +932,17 @@ GEMINI_API_KEY=
 docker compose up --build
 ```
 
-### 4. Open the Application
+### 4. Build or Rebuild the RAG Index
+
+If the vector store files already exist, the app can run directly.
+
+If you add or replace PDFs, rebuild the RAG index:
+
+```bash
+docker compose run --rm backend python scripts/build_rag_index.py
+```
+
+### 5. Open the Application
 
 Frontend:
 
@@ -779,8 +993,8 @@ Use this method if you do not want to use Docker.
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/mehedi77k/NeuroAgent_AI.git
-cd NeuroAgent_AI
+git clone https://github.com/mehedi77k/NeuroAgent_PD.git
+cd NeuroAgent_PD
 ```
 
 ### 2. Create PostgreSQL Database
@@ -838,7 +1052,15 @@ pip install --upgrade pip setuptools wheel
 pip install -r requirements.txt
 ```
 
-### 5. Run the Backend
+### 5. Build RAG Index Manually
+
+From the `backend` directory:
+
+```bash
+python scripts/build_rag_index.py
+```
+
+### 6. Run the Backend
 
 ```bash
 uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
@@ -856,7 +1078,7 @@ Swagger Docs:
 http://localhost:8000/docs
 ```
 
-### 6. Install Frontend Dependencies
+### 7. Install Frontend Dependencies
 
 Open a new terminal:
 
@@ -865,7 +1087,7 @@ cd frontend
 npm install
 ```
 
-### 7. Run the Frontend
+### 8. Run the Frontend
 
 ```bash
 npm run dev
@@ -1020,7 +1242,15 @@ The `/analyze` endpoint returns a full multi-agent result.
     "coordinator": {},
     "triage": {},
     "conflict": {},
-    "rag": {},
+    "rag": {
+      "agent_name": "rag_agent",
+      "retrieval_method": "patient_specific_multi_query_pdf_vector_search_faiss",
+      "knowledge_base": "MDS Clinical Diagnostic Criteria for Parkinson's Disease",
+      "query_strategy": "patient_specific_multi_query",
+      "evidence_found": true,
+      "evidence_count": 4,
+      "evidence": []
+    },
     "progression": {},
     "dbs_referral": {},
     "explainability": {},
@@ -1191,7 +1421,7 @@ This keeps the system usable without external API keys.
 
 ## Clinical Safety Notes
 
-NeuroAgent-PD must be treated as a prototype.
+NeuroAgent_PD must be treated as a prototype.
 
 The system should not be used for:
 
@@ -1211,6 +1441,7 @@ The system can be used for:
 - Clinical decision-support UI research
 - Synthetic dataset model-training experiments
 - Explainability and risk-scoring experiments
+- RAG-based medical evidence retrieval experiments
 
 Required human oversight:
 
@@ -1272,6 +1503,24 @@ Check running containers:
 docker compose ps
 ```
 
+Restart backend:
+
+```bash
+docker compose restart backend
+```
+
+Restart frontend:
+
+```bash
+docker compose restart frontend
+```
+
+Build backend only:
+
+```bash
+docker compose build --no-cache backend
+```
+
 ### Backend
 
 Run backend manually:
@@ -1292,6 +1541,18 @@ Train models:
 
 ```bash
 python backend/scripts/train_models.py
+```
+
+Build RAG index with Docker:
+
+```bash
+docker compose run --rm backend python scripts/build_rag_index.py
+```
+
+Build RAG index manually from backend folder:
+
+```bash
+python scripts/build_rag_index.py
 ```
 
 ### Frontend
@@ -1376,6 +1637,12 @@ VITE_API_URL=http://localhost:8000
 Restart frontend after changing environment variables:
 
 ```bash
+docker compose restart frontend
+```
+
+or manually:
+
+```bash
 npm run dev
 ```
 
@@ -1393,6 +1660,87 @@ Then open:
 
 ```text
 http://localhost:8000/docs
+```
+
+---
+
+### RAG Evidence Is Not Showing
+
+Check that the vector store exists:
+
+```text
+backend/data/medical_knowledge/vector_store/index.faiss
+backend/data/medical_knowledge/vector_store/chunks.json
+```
+
+If missing, rebuild:
+
+```bash
+docker compose run --rm backend python scripts/build_rag_index.py
+```
+
+Then restart backend:
+
+```bash
+docker compose restart backend
+```
+
+---
+
+### RAG Analysis Is Slow
+
+The first RAG-enabled analysis may be slower because the sentence-transformer model is loaded into memory.
+
+Recommended checks:
+
+```bash
+docker compose logs -f backend
+```
+
+```bash
+docker stats
+```
+
+If the backend is CPU-limited, first request latency is expected. Later requests should usually be faster after the model is loaded.
+
+---
+
+### FAISS Import Error
+
+If this error appears:
+
+```text
+ModuleNotFoundError: No module named 'faiss'
+```
+
+Rebuild the backend image:
+
+```bash
+docker compose down
+docker compose build --no-cache backend
+docker compose up
+```
+
+Make sure `backend/requirements.txt` contains:
+
+```text
+faiss-cpu
+sentence-transformers
+pypdf
+```
+
+---
+
+### Docker Build Fails During apt-get
+
+The backend Dockerfile should not require `apt-get` for the current MVP setup.
+
+If Docker build fails while trying to access Debian package mirrors, check that `backend/Dockerfile` does not contain:
+
+```text
+apt-get
+build-essential
+curl
 ```
 
 ---
@@ -1476,65 +1824,10 @@ If another project is using the same ports, update the port mappings in `docker-
 
 ---
 
-## Known Limitations
-
-- This is an MVP prototype, not a clinically validated medical system.
-- The demo patient data is limited.
-- Included training datasets are synthetic or experimental unless replaced.
-- Current ML models require external clinical validation before any real-world use.
-- Rule-based scoring formulas are simplified.
-- No user authentication is currently implemented.
-- No doctor/admin role-based access control is currently implemented.
-- No formal database migration tool such as Alembic is currently configured.
-- Current evidence retrieval uses local medical knowledge files.
-- LLM reports depend on external API providers when enabled.
-- No production-grade patient privacy layer is currently implemented.
-- No audit logging is currently implemented.
-- No automated test suite is currently included.
-- No real EHR/FHIR integration is currently implemented.
-- The system is not cleared for clinical deployment.
-
----
-
-## Future Improvements
-
-- Add authentication and authorization
-- Add doctor/admin roles
-- Add protected API routes
-- Add Alembic database migrations
-- Add patient data privacy controls
-- Add audit logs for doctor actions
-- Add model versioning
-- Add dataset versioning
-- Add SHAP or LIME explainability for trained ML models
-- Add vector-based medical evidence retrieval
-- Add citations for retrieved medical evidence
-- Add PDF report export
-- Add patient report download
-- Add CSV upload for batch analysis
-- Add real-time dashboard analytics
-- Add model performance monitoring
-- Add clinical validation workflow
-- Add clinician approval workflow
-- Add notification system
-- Add deployment configuration for cloud hosting
-- Add CI/CD with GitHub Actions
-- Add backend unit tests
-- Add frontend component tests
-- Add end-to-end tests
-- Add Docker production profile
-- Add HTTPS reverse proxy setup
-- Add environment-specific configuration
-- Add FHIR or EHR integration layer
-- Add privacy-preserving storage for real patient records
-- Add configurable hospital-specific clinical workflows
-
----
-
 ## Repository
 
 ```text
-https://github.com/mehedi77k/NeuroAgent_AI
+https://github.com/mehedi77k/NeuroAgent_PD
 ```
 
 ---
@@ -1549,6 +1842,7 @@ Backend: FastAPI
 Database: PostgreSQL
 ORM: SQLAlchemy
 ML Support: scikit-learn + joblib artifacts
+RAG Support: PDF + sentence-transformers + FAISS
 LLM Support: Optional Groq / Gemini report generation
 Containerization: Docker Compose
 Primary Use: Academic, research, and prototype demonstration
@@ -1560,4 +1854,4 @@ Current API Version: 0.4.0
 
 ## Disclaimer
 
-NeuroAgent-PD is provided for academic and research purposes only. It is not a medical device and is not intended to diagnose, treat, cure, or prevent any disease. The predictions, recommendations, explanations, and reports generated by this system must be reviewed by qualified healthcare professionals before any clinical interpretation or action.
+NeuroAgent_PD is provided for academic and research purposes only. It is not a medical device and is not intended to diagnose, treat, cure, or prevent any disease. The predictions, recommendations, explanations, retrieved evidence, and reports generated by this system must be reviewed by qualified healthcare professionals before any clinical interpretation or action.
