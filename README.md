@@ -1,4 +1,4 @@
-# NeuroAgent-PD: Multi-Agent Parkinson’s Disease Clinical Decision-Support Platform
+# NeuroAgent_PD: Multi-Agent Parkinson’s Disease Clinical Decision-Support Platform
 
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)
@@ -10,10 +10,10 @@
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 ![Status](https://img.shields.io/badge/Status-MVP%20Prototype-success?style=for-the-badge)
 
-**NeuroAgent-PD** is a full-stack multi-agent clinical decision-support prototype for Parkinson’s disease assessment. It combines structured clinical data, speech indicators, gait indicators, coordinated risk scoring, triage support, conflict detection, medical evidence retrieval, progression simulation, DBS referral support, explainability, critic review, doctor feedback, and LLM-assisted report generation into a single doctor-facing web platform.
+**NeuroAgent_PD** is a full-stack multi-agent clinical decision-support prototype for Parkinson’s disease assessment. It combines structured clinical data, speech indicators, gait indicators, coordinated risk scoring, triage support, conflict detection, medical evidence retrieval, progression simulation, DBS referral support, explainability, critic review, doctor feedback, and LLM-assisted report generation into a single doctor-facing web platform.
 
 > **Medical Safety Notice**  
-> NeuroAgent-PD is a research and academic prototype. It does **not** provide a final medical diagnosis, treatment decision, prescription, or replacement for a qualified neurologist. All outputs must be reviewed by a licensed medical professional before any clinical decision is made.
+> NeuroAgent_PD is a research and academic prototype. It does **not** provide a final medical diagnosis, treatment decision, prescription, or replacement for a qualified neurologist. All outputs must be reviewed by a licensed medical professional before any clinical decision is made.
 
 ---
 
@@ -505,10 +505,10 @@ If LLM generation is disabled or API keys are missing, the system falls back to 
 │                                                                      │
 │                  Doctor / Clinician / Research User                  │
 │                                                                      │
-│  - Select patient case                                                │
-│  - Run Parkinson’s multi-agent analysis                               │
-│  - Review risk, triage, evidence, explainability, and report          │
-│  - Submit feedback                                                    │
+│  - Select patient case                                               |
+│  - Run Parkinson’s multi-agent analysis                              |
+│  - Review risk, triage, evidence, explainability, and report         |
+│  - Submit feedback                                                   |
 └──────────────────────────────────────┬───────────────────────────────┘
                                        │
                                        ▼
