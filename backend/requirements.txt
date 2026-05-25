@@ -2,12 +2,13 @@ fastapi
 uvicorn[standard]
 pydantic
 python-dotenv
-
 pandas
 numpy
 scikit-learn==1.7.2
 joblib
-
 sqlalchemy
 psycopg[binary]
 httpx
+pypdf
+sentence-transformers
+faiss-cpu

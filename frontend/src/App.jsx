@@ -84,6 +84,7 @@ const getPageTitle = (activePage) => {
   const titles = {
     "patient-case": "Patient Case",
     "agent-analysis": "Agent Analysis",
+    "medical-evidence": "Medical Evidence",
     reports: "Reports",
     settings: "Settings",
   };
@@ -95,6 +96,7 @@ const getPageSubtitle = (activePage) => {
   const subtitles = {
     "patient-case": "Load and review the current Parkinson’s patient case.",
     "agent-analysis": "Review clinical, speech, gait, triage, and safety agent outputs.",
+    "medical-evidence": "Review retrieved MDS diagnostic evidence from the RAG knowledge base.",
     reports: "Review the generated doctor-facing clinical summary.",
     settings: "MVP configuration and project status.",
   };
@@ -269,34 +271,90 @@ const ConflictPanel = ({ conflict }) => {
   );
 };
 
-const EvidenceCards = ({ evidence }) => (
-  <div className="evidence-list">
-    {evidence?.map((item, index) => {
-      const evidenceKey = item?.source
-        ? `${item.source}-${index}`
-        : `evidence-${index}`;
+const EvidenceCards = ({ evidence }) => {
+  const items = Array.isArray(evidence) ? evidence : [];
 
-      return (
-        <div key={evidenceKey} className="evidence-card">
-          <div className="evidence-card-header">
-            <span className="evidence-topic">
-              {item?.topic === "motor symptoms"
-                ? "Clinical Motor Evidence"
-                : formatLabel(item?.topic)}
-            </span>
-            <span className="evidence-source">{safeValue(item?.source)}</span>
+  if (items.length === 0) {
+    return (
+      <div className="empty-state compact">
+        <h3>No evidence retrieved</h3>
+        <p>
+          Run analysis again after confirming that the RAG index exists and the
+          backend response contains agent_results.rag.evidence.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="evidence-list">
+      {items.map((item, index) => {
+        const evidenceKey = item?.chunk_id || item?.source || `evidence-${index}`;
+        const similarity =
+          typeof item?.similarity_score === "number"
+            ? item.similarity_score.toFixed(3)
+            : safeValue(item?.similarity_score);
+
+        return (
+          <div className="evidence-card" key={evidenceKey}>
+            <div className="evidence-card-header">
+              <div>
+                <p className="eyebrow">Evidence #{index + 1}</p>
+                <h3>{safeValue(item?.topic)}</h3>
+              </div>
+
+              <span className="evidence-score">Similarity {similarity}</span>
+            </div>
+
+            <div className="evidence-meta-grid">
+              <div>
+                <span>Source</span>
+                <strong>{safeValue(item?.source)}</strong>
+              </div>
+
+              <div>
+                <span>Page</span>
+                <strong>{safeValue(item?.page)}</strong>
+              </div>
+
+              <div>
+                <span>Chunk ID</span>
+                <strong>{safeValue(item?.chunk_id)}</strong>
+              </div>
+            </div>
+
+            <div className="evidence-reason">
+              <strong>Matched Reason</strong>
+              <p>{safeValue(item?.matched_reason)}</p>
+            </div>
+
+            {item?.search_query && (
+              <div className="evidence-reason">
+                <strong>Patient-Specific Search Query</strong>
+                <p>{item.search_query}</p>
+              </div>
+            )}
+
+            <div className="evidence-text">
+              <strong>Retrieved Evidence</strong>
+              <p>{safeValue(item?.text)}</p>
+            </div>
           </div>
+        );
+      })}
+    </div>
+  );
+};
 
-          <p className="evidence-reason">{safeValue(item?.matched_reason)}</p>
-          <p className="evidence-text">{safeValue(item?.text)}</p>
-        </div>
-      );
-    })}
-  </div>
-);
-
-const MedicalEvidencePanel = ({ rag }) => {
-  if (!rag) return null;
+const MedicalEvidencePanel = ({ rag, summary }) => {
+  if (!rag) {
+    return (
+      <div className="card">
+        <h3>Medical Evidence Agent</h3>
+        <p>No RAG evidence is available. Run agent analysis first.</p>
+      </div>
+    );
+  }
 
   const evidenceFoundLabel =
     rag?.evidence_found === true
@@ -305,38 +363,58 @@ const MedicalEvidencePanel = ({ rag }) => {
         ? "No"
         : "N/A";
 
-  const evidenceCount = rag?.evidence_count ?? rag?.evidence?.length;
+  const evidenceCount = rag?.evidence_count ?? rag?.evidence?.length ?? 0;
 
   const safetyNote =
     rag?.safety_note && rag?.safety_note !== REQUIRED_SAFETY_NOTE
-      ? `${rag?.safety_note} ${REQUIRED_SAFETY_NOTE}`
+      ? `${rag.safety_note} ${REQUIRED_SAFETY_NOTE}`
       : rag?.safety_note || REQUIRED_SAFETY_NOTE;
 
   return (
-    <div className="card medical-evidence-panel">
-      <div className="evidence-header">
-        <div>
-          <h3>Medical Evidence Agent</h3>
+    <div className="medical-evidence-page">
+      <div className="card evidence-overview-card">
+        <div className="section-header">
+          <div>
+            <p className="eyebrow">RAG Agent</p>
+            <h3>Medical Evidence Review</h3>
+          </div>
+
+          <span className="status-pill status-green">
+            {safeValue(rag?.retrieval_method)}
+          </span>
         </div>
 
-        <span className="evidence-count-badge">{safeValue(evidenceCount)}</span>
-      </div>
+        <div className="evidence-summary-grid">
+          <div>
+            <span>Knowledge Base</span>
+            <strong>{safeValue(rag?.knowledge_base)}</strong>
+          </div>
 
-      <div className="evidence-status-grid">
-        <div className="evidence-status-item">
-          <label>Evidence Found</label>
-          <span>{evidenceFoundLabel}</span>
+          <div>
+            <span>Evidence Found</span>
+            <strong>{evidenceFoundLabel}</strong>
+          </div>
+
+          <div>
+            <span>Evidence Count</span>
+            <strong>{safeValue(evidenceCount)}</strong>
+          </div>
         </div>
 
-        <div className="evidence-status-item">
-          <label>Evidence Count</label>
-          <span>{safeValue(rag?.evidence_count ?? rag?.evidence?.length)}</span>
+        {summary && (
+          <div className="evidence-summary-text">
+            <strong>Report Evidence Summary</strong>
+            <p>{safeValue(summary)}</p>
+          </div>
+        )}
+
+        <div className="safety-note-box">
+          <strong>Safety Note</strong>
+          <p>{safeValue(safetyNote)}</p>
         </div>
       </div>
 
       <EvidenceCards evidence={rag?.evidence} />
-
-      <div className="evidence-safety-note">{safeValue(safetyNote)}</div>
     </div>
   );
 };
@@ -980,6 +1058,12 @@ function App() {
       return;
     }
 
+    if (page === "medical-evidence" && !analysis) {
+      setStatusMsg("Run agent analysis first to view retrieved medical evidence.");
+      setTimeout(() => setStatusMsg(""), 2500);
+      return;
+    }
+
     if (page === "reports") {
       if (patient?.patient_id) {
         loadPatientHistory(patient.patient_id);
@@ -1073,6 +1157,15 @@ function App() {
                 onClick={() => handleNavigation("agent-analysis")}
               >
                 Agent Analysis
+              </button>
+            </li>
+
+            <li className={activePage === "medical-evidence" ? "active" : ""}>
+              <button
+                type="button"
+                onClick={() => handleNavigation("medical-evidence")}
+              >
+                Medical Evidence
               </button>
             </li>
 
@@ -1515,8 +1608,6 @@ function App() {
                     </div>
                   )}
 
-                  <MedicalEvidencePanel rag={analysis?.agent_results?.rag} />
-
                   <ProgressionPanel
                     progression={analysis?.agent_results?.progression}
                   />
@@ -1571,6 +1662,27 @@ function App() {
                 </div>
               )}
             </>
+          )}
+
+          {activePage === "medical-evidence" && (
+            <div className="page-stack">
+              {!analysis && (
+                <div className="card">
+                  <h3>Medical Evidence Not Available</h3>
+                  <p>
+                    Load a patient and run agent analysis to retrieve evidence from
+                    the RAG knowledge base.
+                  </p>
+                </div>
+              )}
+
+              {analysis && (
+                <MedicalEvidencePanel
+                  rag={rag}
+                  summary={medicalEvidenceSummary}
+                />
+              )}
+            </div>
           )}
 
           {activePage === "reports" && (
