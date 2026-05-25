@@ -1913,3 +1913,550 @@ nav li button {
   }
 }
 
+
+/* ============================= */
+/* Phase 6: DBS Referral Agent   */
+/* ============================= */
+
+.dbs-referral-panel {
+  border-left: 6px solid var(--outline-strong);
+}
+
+.dbs-referral-panel.referral-strong {
+  border-left-color: var(--red);
+}
+
+.dbs-referral-panel.referral-moderate {
+  border-left-color: var(--amber);
+}
+
+.dbs-referral-panel.referral-not-indicated {
+  border-left-color: var(--green);
+}
+
+.dbs-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.dbs-header h3 {
+  margin-bottom: 0.25rem;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 900;
+}
+
+.dbs-header p {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.dbs-referral-badge {
+  padding: 0.4rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 900;
+  white-space: nowrap;
+  border: 1px solid var(--outline);
+}
+
+.dbs-referral-badge.referral-strong {
+  background: var(--red-bg);
+  color: var(--red-text);
+  border-color: #fecaca;
+}
+
+.dbs-referral-badge.referral-moderate {
+  background: var(--amber-bg);
+  color: var(--amber-text);
+  border-color: #fde68a;
+}
+
+.dbs-referral-badge.referral-not-indicated {
+  background: var(--green-bg);
+  color: var(--green-text);
+  border-color: #bbf7d0;
+}
+
+.dbs-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.dbs-summary-item {
+  background: #f8fafc;
+  border: 1px solid var(--outline);
+  border-radius: var(--radius-sm);
+  padding: 0.85rem;
+}
+
+.dbs-summary-item label {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 900;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+
+.dbs-summary-item span {
+  font-size: 0.95rem;
+  font-weight: 900;
+  color: var(--text-main);
+}
+
+.dbs-criteria-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 0.6rem;
+  margin-bottom: 1.25rem;
+}
+
+.dbs-criterion {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: #f8fafc;
+  border: 1px solid var(--outline);
+  border-radius: var(--radius-sm);
+  padding: 0.7rem 0.85rem;
+}
+
+.dbs-criterion.met {
+  background: var(--green-bg);
+  border-color: #bbf7d0;
+}
+
+.dbs-criterion.not-met {
+  background: #f8fafc;
+  border-color: var(--outline);
+}
+
+.dbs-criterion-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.dbs-criterion-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.dbs-recommendation {
+  background: #ffffff;
+  border: 1px solid var(--outline);
+  border-radius: var(--radius-sm);
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.dbs-recommendation label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: 0.4rem;
+}
+
+.dbs-recommendation p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.dbs-explanation {
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  margin-bottom: 1rem;
+}
+
+.dbs-safety-note {
+  background: var(--amber-bg);
+  color: var(--amber-text);
+  border: 1px solid #fde68a;
+  border-radius: var(--radius-sm);
+  padding: 0.85rem;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.report-dbs-section {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--outline);
+}
+
+@media (max-width: 980px) {
+  .dbs-header {
+    flex-direction: column;
+  }
+
+  .dbs-criteria-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================= */
+/* Phase 7: Explainability Agent */
+/* ============================= */
+
+.explainability-panel {
+  border: 1px solid var(--outline);
+}
+
+.explainability-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.explainability-header h3 {
+  margin-bottom: 0.2rem;
+}
+
+.explainability-method-badge {
+  padding: 0.35rem 0.7rem;
+  background: var(--primary-light);
+  color: var(--primary);
+  border: 1px solid #dbeafe;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.explainability-agents-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.explain-agent-card {
+  background: #f8fafc;
+  border: 1px solid var(--outline);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+}
+
+.explain-agent-card h4 {
+  font-size: 0.8rem;
+  font-weight: 900;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.9rem;
+}
+
+.explain-feature-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.explain-feature-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.explain-feature-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.explain-feature-name {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.explain-feature-pct {
+  font-size: 0.75rem;
+  font-weight: 900;
+  color: var(--primary);
+}
+
+.explain-bar-track {
+  width: 100%;
+  height: 8px;
+  background: var(--outline);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.explain-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--primary);
+  transition: width 0.4s ease;
+}
+
+.explain-bar-fill.high {
+  background: var(--red);
+}
+
+.explain-bar-fill.med {
+  background: var(--amber);
+}
+
+.explain-bar-fill.low {
+  background: var(--green);
+}
+
+.explain-feature-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+  font-weight: 700;
+}
+
+.coordinator-fusion-section {
+  background: #f8fafc;
+  border: 1px solid var(--outline);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.coordinator-fusion-section h4 {
+  font-size: 0.8rem;
+  font-weight: 900;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.9rem;
+}
+
+.fusion-weights-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.fusion-weight-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.fusion-weight-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-main);
+  min-width: 100px;
+}
+
+.fusion-weight-bar-track {
+  flex: 1;
+  height: 10px;
+  background: var(--outline);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.fusion-weight-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--primary);
+  transition: width 0.4s ease;
+}
+
+.fusion-weight-pct {
+  font-size: 0.78rem;
+  font-weight: 900;
+  color: var(--primary);
+  min-width: 40px;
+  text-align: right;
+}
+
+.explainability-explanation {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.explainability-safety-note {
+  background: var(--amber-bg);
+  color: var(--amber-text);
+  border: 1px solid #fde68a;
+  border-radius: var(--radius-sm);
+  padding: 0.85rem;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+@media (max-width: 1100px) {
+  .explainability-agents-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .explainability-agents-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================= */
+/* Phase 8: LLM Report Generator */
+/* ============================= */
+
+.llm-report-section {
+  background: linear-gradient(135deg, #f0f9ff, #eff6ff);
+  border: 1px solid #bfdbfe;
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.llm-report-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.llm-report-header label {
+  font-size: 0.8rem;
+  font-weight: 900;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.llm-provider-badge {
+  padding: 0.3rem 0.6rem;
+  background: var(--primary-light);
+  color: var(--primary);
+  border: 1px solid #dbeafe;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 900;
+}
+
+.llm-report-content {
+  background: #ffffff;
+  border: 1px solid var(--outline);
+  border-radius: var(--radius-sm);
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.llm-report-content p {
+  font-size: 0.9rem;
+  color: var(--text-main);
+  line-height: 1.7;
+  margin-bottom: 0.4rem;
+}
+
+.llm-report-content p:last-child {
+  margin-bottom: 0;
+}
+
+.llm-report-disclaimer {
+  background: var(--amber-bg);
+  color: var(--amber-text);
+  border: 1px solid #fde68a;
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 0.9rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  font-style: italic;
+}
+
+/* ============================= */
+/* Phase 9: ML Model Predictions */
+/* ============================= */
+
+.ml-stat {
+  background: #f0f9ff !important;
+  border-color: #bfdbfe !important;
+}
+
+.ml-prediction-bar {
+  background: #f0f9ff;
+  border: 1px solid #bfdbfe;
+  border-radius: var(--radius-sm);
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.ml-prediction-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.6rem;
+}
+
+.ml-badge {
+  background: var(--primary);
+  color: white;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.ml-confidence {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.ml-probabilities {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.ml-prob-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ml-prob-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  min-width: 70px;
+}
+
+.ml-prob-bar-track {
+  flex: 1;
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.ml-prob-bar-fill {
+  height: 100%;
+  background: var(--primary);
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+.ml-prob-value {
+  font-size: 0.7rem;
+  font-weight: 900;
+  color: var(--text-main);
+  min-width: 32px;
+  text-align: right;
+}

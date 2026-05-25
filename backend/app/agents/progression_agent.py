@@ -1,5 +1,14 @@
 from app.agents.risk_utils import clamp_score, get_risk_level
 
+import numpy as np
+
+from app.models.ml_loader import (
+    is_progression_model_available,
+    progression_label_encoder,
+    progression_model,
+    progression_scaler,
+)
+
 
 def _get_medication_multiplier(medication_response: str) -> float:
     value = str(medication_response or "").lower()
@@ -58,6 +67,52 @@ def _get_agent_pressure(clinical_result, gait_result, conflict_result) -> float:
     return pressure
 
 
+def _ml_progression_prediction(patient_case, clinical_result, gait_result, coordinator_result):
+    """
+    ML-based progression classification.
+    Returns dict with ml_ prefixed keys, or empty dict if unavailable.
+    """
+
+    if not is_progression_model_available():
+        return {"ml_available": False}
+
+    try:
+        med_response = str(getattr(patient_case.clinical, "medication_response", "")).lower()
+        med_encoded = {"good": 0, "stable": 0, "moderate": 1, "partial": 1, "poor": 2, "limited": 2}.get(med_response, 1)
+
+        features = np.array([[
+            coordinator_result.get("final_risk_score", 0.0),
+            getattr(patient_case.clinical, "disease_duration_years", 0.0),
+            med_encoded,
+            clinical_result.get("risk_score", 0.0),
+            gait_result.get("risk_score", 0.0),
+            getattr(patient_case, "age", 60),
+        ]])
+
+        features_scaled = progression_scaler.transform(features)
+        prediction_encoded = progression_model.predict(features_scaled)[0]
+        probabilities = progression_model.predict_proba(features_scaled)[0]
+
+        predicted_class = progression_label_encoder.inverse_transform([prediction_encoded])[0]
+        confidence = float(np.max(probabilities))
+
+        class_probs = {
+            label: round(float(prob), 4)
+            for label, prob in zip(progression_label_encoder.classes_, probabilities)
+        }
+
+        return {
+            "ml_available": True,
+            "ml_prediction": predicted_class,
+            "ml_confidence": round(confidence, 2),
+            "ml_class_probabilities": class_probs,
+        }
+
+    except Exception as e:
+        print(f"[ProgressionAgent] ML prediction failed: {e}")
+        return {"ml_available": False}
+
+
 def simulate_progression(
     patient_case,
     clinical_result,
@@ -73,6 +128,8 @@ def simulate_progression(
     It creates a simple 12-month simulated risk trajectory
     using coordinated risk, disease duration, medication response,
     gait involvement, and conflict signal.
+
+    Also runs an ML-based progression classification if the model is available.
     """
 
     baseline_risk = coordinator_result.get("final_risk_score", 0.0)
@@ -157,4 +214,5 @@ def simulate_progression(
             "This is a simulation for clinical decision-support only and does not predict "
             "the exact future disease course."
         ),
+        **_ml_progression_prediction(patient_case, clinical_result, gait_result, coordinator_result),
     }

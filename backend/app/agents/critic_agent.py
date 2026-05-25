@@ -5,6 +5,7 @@ def run_critic(
     coordinator_result,
     conflict_result=None,
     rag_result=None,
+    dbs_referral_result=None,
 ):
     warnings = []
 
@@ -60,6 +61,20 @@ def run_critic(
     warnings.append(
         "This system is a clinical decision-support prototype and does not provide a final medical diagnosis."
     )
+
+    if dbs_referral_result:
+        referral_level = dbs_referral_result.get("referral_level", "not_indicated")
+
+        if referral_level == "strong":
+            warnings.append(
+                "DBS referral agent detected strong candidacy. "
+                "Specialist discussion for Deep Brain Stimulation may be warranted."
+            )
+        elif referral_level == "moderate":
+            warnings.append(
+                "DBS referral agent detected moderate candidacy. "
+                "Consider discussing DBS evaluation with the care team."
+            )
 
     return {
         "agent_name": "critic_agent",

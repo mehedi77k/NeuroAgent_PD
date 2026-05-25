@@ -1,0 +1,22 @@
+{
+  "agent": "progression_agent",
+  "model_type": "GradientBoostingClassifier",
+  "features": [
+    "baseline_risk_score",
+    "disease_duration_years",
+    "medication_response_encoded",
+    "clinical_risk_score",
+    "gait_risk_score",
+    "age"
+  ],
+  "classes": [
+    "moderate_progression",
+    "rapid_progression",
+    "slow_progression",
+    "stable"
+  ],
+  "test_accuracy": 0.9925,
+  "test_f1_macro": 0.9928,
+  "n_samples": 2000,
+  "note": "Trained on synthetic data. Does not replace clinical validation."
+}

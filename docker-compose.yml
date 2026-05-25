@@ -10,6 +10,11 @@ services:
       - "5435:5432"
     volumes:
       - neuroagent_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
 
   backend:
     build:
@@ -22,7 +27,8 @@ services:
     volumes:
       - ./backend:/app
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
   frontend:

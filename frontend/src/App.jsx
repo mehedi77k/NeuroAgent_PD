@@ -138,7 +138,46 @@ const AgentCard = ({ title, agentData, features, featureData }) => {
             {safeValue(formatLabel(agentData.risk_level))}
           </span>
         </div>
+
+        {agentData.ml_available && (
+          <div className="stat-item ml-stat">
+            <label>ML Prediction</label>
+            <span>{formatLabel(agentData.ml_prediction)}</span>
+          </div>
+        )}
       </div>
+
+      {agentData.ml_available && (
+        <div className="ml-prediction-bar">
+          <div className="ml-prediction-header">
+            <span className="ml-badge">ML Model</span>
+            <span className="ml-confidence">
+              {toPercent(agentData.ml_confidence)}% confidence
+            </span>
+          </div>
+
+          {agentData.ml_class_probabilities && (
+            <div className="ml-probabilities">
+              {Object.entries(agentData.ml_class_probabilities).map(
+                ([cls, prob]) => (
+                  <div key={cls} className="ml-prob-item">
+                    <span className="ml-prob-label">{formatLabel(cls)}</span>
+                    <div className="ml-prob-bar-track">
+                      <div
+                        className="ml-prob-bar-fill"
+                        style={{ width: `${Math.round(prob * 100)}%` }}
+                      />
+                    </div>
+                    <span className="ml-prob-value">
+                      {Math.round(prob * 100)}%
+                    </span>
+                  </div>
+                ),
+              )}
+            </div>
+          )}
+        </div>
+      )}
 
       <p className="agent-explanation">{safeValue(agentData.explanation)}</p>
 
@@ -383,6 +422,199 @@ const ProgressionPanel = ({ progression }) => {
 
       <div className="progression-safety-note">
         {safeValue(progression.safety_note)}
+      </div>
+    </div>
+  );
+};
+
+const DBSReferralPanel = ({ dbsReferral }) => {
+  if (!dbsReferral) return null;
+
+  const referralLevel = dbsReferral.referral_level || "not_indicated";
+  const referralClass = `referral-${referralLevel.replace("_", "-")}`;
+
+  const criteriaDetails = dbsReferral.criteria_details || {};
+  const criteriaKeys = Object.keys(criteriaDetails);
+
+  return (
+    <div className={`card dbs-referral-panel ${referralClass}`}>
+      <div className="dbs-header">
+        <div>
+          <h3>DBS Referral Support Agent</h3>
+          <p>Deep Brain Stimulation candidacy evaluation for specialist discussion.</p>
+        </div>
+
+        <span className={`dbs-referral-badge ${referralClass}`}>
+          {formatLabel(referralLevel)}
+        </span>
+      </div>
+
+      <div className="dbs-summary-grid">
+        <div className="dbs-summary-item">
+          <label>Referral Recommended</label>
+          <span>{dbsReferral.referral_recommended ? "Yes" : "No"}</span>
+        </div>
+
+        <div className="dbs-summary-item">
+          <label>Referral Level</label>
+          <span>{formatLabel(referralLevel)}</span>
+        </div>
+
+        <div className="dbs-summary-item">
+          <label>Referral Score</label>
+          <span>{toPercent(dbsReferral.referral_score)}%</span>
+        </div>
+
+        <div className="dbs-summary-item">
+          <label>Criteria Met</label>
+          <span>
+            {dbsReferral.criteria_met?.length || 0} of{" "}
+            {(dbsReferral.criteria_met?.length || 0) +
+              (dbsReferral.criteria_not_met?.length || 0)}
+          </span>
+        </div>
+      </div>
+
+      {criteriaKeys.length > 0 && (
+        <div className="dbs-criteria-grid">
+          {criteriaKeys.map((key) => {
+            const criterion = criteriaDetails[key];
+            const isMet = criterion?.met;
+
+            return (
+              <div
+                key={key}
+                className={`dbs-criterion ${isMet ? "met" : "not-met"}`}
+              >
+                <span className="dbs-criterion-icon">
+                  {isMet ? "✓" : "✗"}
+                </span>
+                <span className="dbs-criterion-label">
+                  {criterion?.label || formatLabel(key)}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      <div className="dbs-recommendation">
+        <label>Recommendation</label>
+        <p>{safeValue(dbsReferral.recommendation)}</p>
+      </div>
+
+      <p className="dbs-explanation">{safeValue(dbsReferral.explanation)}</p>
+
+      <div className="dbs-safety-note">
+        {safeValue(dbsReferral.safety_note)}
+      </div>
+    </div>
+  );
+};
+
+const getBarColorClass = (percentage) => {
+  if (percentage >= 40) return "high";
+  if (percentage >= 25) return "med";
+  return "low";
+};
+
+const ExplainabilityPanel = ({ explainability }) => {
+  if (!explainability) return null;
+
+  const agents = [
+    { key: "clinical", title: "Clinical Agent" },
+    { key: "speech", title: "Speech Agent" },
+    { key: "gait", title: "Gait Agent" },
+  ];
+
+  const coordinator = explainability.coordinator;
+
+  return (
+    <div className="card explainability-panel">
+      <div className="explainability-header">
+        <div>
+          <h3>Explainability Agent</h3>
+          <p className="agent-subtitle">
+            Feature contribution breakdown for each domain agent.
+          </p>
+        </div>
+
+        <span className="explainability-method-badge">
+          {formatLabel(explainability.method)}
+        </span>
+      </div>
+
+      <div className="explainability-agents-grid">
+        {agents.map(({ key, title }) => {
+          const agentData = explainability[key];
+          if (!agentData) return null;
+
+          return (
+            <div key={key} className="explain-agent-card">
+              <h4>{title}</h4>
+
+              <div className="explain-feature-list">
+                {agentData.features?.map((feature) => (
+                  <div key={feature.name} className="explain-feature-item">
+                    <div className="explain-feature-header">
+                      <span className="explain-feature-name">
+                        {feature.label}
+                      </span>
+                      <span className="explain-feature-pct">
+                        {feature.percentage}%
+                      </span>
+                    </div>
+
+                    <div className="explain-bar-track">
+                      <div
+                        className={`explain-bar-fill ${getBarColorClass(
+                          feature.percentage,
+                        )}`}
+                        style={{ width: `${Math.min(feature.percentage, 100)}%` }}
+                      />
+                    </div>
+
+                    <div className="explain-feature-meta">
+                      <span>Value: {feature.value}</span>
+                      <span>Weight: {feature.weight}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {coordinator && (
+        <div className="coordinator-fusion-section">
+          <h4>Coordinator Fusion Weights</h4>
+
+          <div className="fusion-weights-list">
+            {coordinator.fusion_weights?.map((item) => (
+              <div key={item.agent} className="fusion-weight-item">
+                <span className="fusion-weight-label">{item.label}</span>
+
+                <div className="fusion-weight-bar-track">
+                  <div
+                    className="fusion-weight-bar-fill"
+                    style={{ width: `${item.percentage}%` }}
+                  />
+                </div>
+
+                <span className="fusion-weight-pct">{item.percentage}%</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <p className="explainability-explanation">
+        {safeValue(explainability.explanation)}
+      </p>
+
+      <div className="explainability-safety-note">
+        {safeValue(explainability.safety_note)}
       </div>
     </div>
   );
@@ -642,6 +874,8 @@ function App() {
   const conflict = analysis?.agent_results?.conflict;
   const rag = analysis?.agent_results?.rag;
   const progression = analysis?.agent_results?.progression;
+  const dbsReferral = analysis?.agent_results?.dbs_referral;
+  const explainability = analysis?.agent_results?.explainability;
   const medicalEvidenceSummary = analysis?.report?.medical_evidence_summary;
 
   const diseaseDuration =
@@ -1127,6 +1361,10 @@ function App() {
                     />
                   </div>
 
+                  <ExplainabilityPanel
+                    explainability={analysis?.agent_results?.explainability}
+                  />
+
                   {(coordinator || triage) && (
                     <div className="analysis-decision-row">
                       {coordinator && (
@@ -1283,13 +1521,43 @@ function App() {
                     progression={analysis?.agent_results?.progression}
                   />
 
+                  <DBSReferralPanel
+                    dbsReferral={analysis?.agent_results?.dbs_referral}
+                  />
+
                   {analysis.report && (
                     <div className="analysis-report-preview">
                       <div className="card report-section">
                         <h3>Doctor Summary</h3>
 
+                        {analysis.report?.llm_generated && analysis.report?.llm_report && (
+                          <div className="llm-report-section">
+                            <div className="llm-report-header">
+                              <label>AI-Generated Clinical Report</label>
+                              <span className="llm-provider-badge">
+                                {formatLabel(analysis.report?.llm_provider)}
+                              </span>
+                            </div>
+
+                            <div className="llm-report-content">
+                              {analysis.report.llm_report.split("\n").map((line, idx) => (
+                                <p key={idx}>{line || "\u00A0"}</p>
+                              ))}
+                            </div>
+
+                            <div className="llm-report-disclaimer">
+                              AI-generated report for clinical decision-support only.
+                              Must be reviewed by a qualified neurologist before any clinical action.
+                            </div>
+                          </div>
+                        )}
+
                         <div className="summary-box">
-                          <label>Summary</label>
+                          <label>
+                            {analysis.report?.llm_generated
+                              ? "Template Summary (Fallback)"
+                              : "Summary"}
+                          </label>
                           <p>{safeValue(analysis.report?.summary)}</p>
                         </div>
 
@@ -1322,9 +1590,35 @@ function App() {
                   <h3>Doctor’s Clinical Summary</h3>
 
                   <div className="summary-box">
-                    <label>Automated Synthesis</label>
+                    <label>
+                      {analysis.report?.llm_generated
+                        ? "Template Summary (Fallback)"
+                        : "Automated Synthesis"}
+                    </label>
                     <p>{safeValue(analysis.report?.summary)}</p>
                   </div>
+
+                  {analysis.report?.llm_generated && analysis.report?.llm_report && (
+                    <div className="llm-report-section">
+                      <div className="llm-report-header">
+                        <label>AI-Generated Clinical Report</label>
+                        <span className="llm-provider-badge">
+                          {formatLabel(analysis.report?.llm_provider)}
+                        </span>
+                      </div>
+
+                      <div className="llm-report-content">
+                        {analysis.report.llm_report.split("\n").map((line, idx) => (
+                          <p key={idx}>{line || "\u00A0"}</p>
+                        ))}
+                      </div>
+
+                      <div className="llm-report-disclaimer">
+                        AI-generated report for clinical decision-support only.
+                        Must be reviewed by a qualified neurologist before any clinical action.
+                      </div>
+                    </div>
+                  )}
 
                   <div className="explanation-box">
                     <label>Clinical Interpretation</label>
@@ -1403,6 +1697,38 @@ function App() {
 
                       <div className="progression-safety-note">
                         {safeValue(progression.safety_note)}
+                      </div>
+                    </div>
+                  )}
+
+                  {dbsReferral && (
+                    <div className="report-dbs-section">
+                      <div className="dbs-header">
+                        <div>
+                          <h4>DBS Referral Assessment</h4>
+                          <p>Deep Brain Stimulation candidacy evaluation.</p>
+                        </div>
+
+                        <span
+                          className={`dbs-referral-badge referral-${(
+                            dbsReferral.referral_level || "not-indicated"
+                          ).replace("_", "-")}`}
+                        >
+                          {formatLabel(dbsReferral.referral_level)}
+                        </span>
+                      </div>
+
+                      <p className="evidence-text">
+                        {safeValue(analysis.report?.dbs_referral_summary)}
+                      </p>
+
+                      <div className="dbs-recommendation">
+                        <label>Recommendation</label>
+                        <p>{safeValue(dbsReferral.recommendation)}</p>
+                      </div>
+
+                      <div className="dbs-safety-note">
+                        {safeValue(dbsReferral.safety_note)}
                       </div>
                     </div>
                   )}

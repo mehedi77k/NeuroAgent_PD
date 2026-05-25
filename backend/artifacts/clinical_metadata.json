@@ -1,0 +1,22 @@
+{
+  "agent": "clinical_agent",
+  "model_type": "GradientBoostingClassifier",
+  "features": [
+    "updrs_score",
+    "tremor_score",
+    "rigidity_score",
+    "bradykinesia_score",
+    "disease_duration_years",
+    "medication_response_encoded"
+  ],
+  "classes": [
+    "borderline",
+    "high",
+    "low",
+    "moderate"
+  ],
+  "test_accuracy": 0.905,
+  "test_f1_macro": 0.8873,
+  "n_samples": 2000,
+  "note": "Trained on synthetic data. Does not replace clinical validation."
+}
